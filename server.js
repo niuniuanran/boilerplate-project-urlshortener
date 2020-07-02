@@ -65,6 +65,17 @@ app.post('/api/shorturl/new', (req, res) => {
 
 });
 
+app.get('/api/shorturl/:short', (req,res, next)=>{
+    const short = req.params.short;
+    if(!short) res.send("Invalid short url!");
+    UrlPair.findOne({"short":short}, (err, pair) => {
+        if(err) next(err);
+        if(!pair) res.send({"Error": "Short URL not found!"});
+        else res.redirect(pair.original);
+    })
+
+});
+
 app.listen(port, function () {
     console.log('Node.js listening ...');
 });
